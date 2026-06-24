@@ -4,21 +4,20 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ytget/ytdlp"
+	"github.com/lrstanley/go-ytdlp"
 )
 
 func Download(url string) error {
-	d := ytdlp.New()
+	ytdlp.MustInstall(context.Background(), nil)
 
-	d = d.WithProgress(func(p ytdlp.Progress) {
-		fmt.Printf("\rDownloading: %.1f%%", p.Percent)
-	})
+	dl := ytdlp.New().
+		Output("~/Downloads/%(title)s.%(ext)s")
 
-	info, err := d.Download(context.Background(), url)
+	_, err := dl.Run(context.Background(), url)
 	if err != nil {
-		return err
+		return fmt.Errorf("ошибка скачивания: %w", err)
 	}
 
-	fmt.Printf("\nSaved: %s\n", info.Title)
+	fmt.Printf("Saved: ~/Downloads")
 	return nil
 }
