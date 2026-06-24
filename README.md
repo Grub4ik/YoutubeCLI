@@ -78,7 +78,7 @@ MIT License
 # Author
 
 Grub4ik
-Contributing
+# Contributing
 
 Issues and pull requests are welcome. Open an issue on GitHub or contact the author directly.
 
