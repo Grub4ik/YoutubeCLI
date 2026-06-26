@@ -8,7 +8,7 @@ Installation
 
 Clone the repository, build the binary, and install it system-wide:
 
-git clone https://github.com/yourusername/youtubecli.git
+git clone https://github.com/Grub4ik/youtubecli.git
 cd youtubecli
 go build -o yt
 sudo cp yt /usr/local/bin/
