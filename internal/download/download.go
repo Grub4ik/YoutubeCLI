@@ -9,7 +9,7 @@ import (
 	"github.com/lrstanley/go-ytdlp"
 )
 
-func Video(url, directory string) error {
+func Video(url, directory string, asMP3 bool) error {
 	_, err := ytdlp.Install(context.Background(), nil)
 	if err != nil {
 		return fmt.Errorf("failed to install yt-dlp: %w", err)
@@ -36,7 +36,19 @@ func Video(url, directory string) error {
 		}
 	}
 
-	dl := ytdlp.New().Output(outputPath)
+	dl := ytdlp.New().
+		Output(outputPath)
+
+	if asMP3 {
+		dl = dl.
+			Format("bestaudio").
+			ExtractAudio().
+			AudioFormat("mp3").
+			AudioQuality("0")
+	} else {
+		dl = dl.Format("best[ext=mp4]")
+	}
+
 	_, err = dl.Run(context.Background(), url)
 	if err != nil {
 		return fmt.Errorf("download error: %w", err)

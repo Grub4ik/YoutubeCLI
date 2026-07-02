@@ -15,6 +15,7 @@ func main() {
 	var (
 		download  = flag.String("d", "", "Download video")
 		outputdir = flag.String("a", "", "Output direction")
+		mp3       = flag.Bool("mp3", false, "Download as MP3 (audio only)")
 		help      = flag.Bool("h", false, "Show help")
 	)
 
@@ -42,7 +43,7 @@ Examples:
 	}
 
 	if *download != "" {
-		if err := videoDownload.Video(*download, *outputdir); err != nil {
+		if err := videoDownload.Video(*download, *outputdir, *mp3); err != nil {
 			fmt.Printf("Error while downloading: %v\n", err)
 		}
 		return
