@@ -37,14 +37,13 @@ func Video(url, directory string) error {
 	}
 
 	dl := ytdlp.New().Output(outputPath)
-	result, err := dl.Run(context.Background(), url)
+	_, err = dl.Run(context.Background(), url)
 	if err != nil {
 		return fmt.Errorf("download error: %w", err)
 	}
 
 	fmt.Printf("Download complete!\n")
 	fmt.Printf("Saved to: %s\n", outputPath)
-	fmt.Printf("Title: %s\n", result)
 
 	return nil
 }

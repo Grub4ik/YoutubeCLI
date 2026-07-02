@@ -14,12 +14,32 @@ func OpenMainPage() {
 func main() {
 	var (
 		download  = flag.String("d", "", "Download video")
-		outputdir = flag.String("a", "", "Output irection")
+		outputdir = flag.String("a", "", "Output direction")
+		help      = flag.Bool("h", false, "Show help")
 	)
 
 	flag.Parse()
 
 	args := flag.Args()
+
+	if *help {
+		fmt.Println(`
+		Usage:
+  youtubecli [flags] [search query]
+
+Flags:
+  -h          Show this help
+  -d <url>    Download video
+  -a <dir>    Output directory (default: current dir)
+
+Examples:
+  youtubecli                      Open YouTube homepage
+  youtubecli "cats"               Search and open first video
+  youtubecli -d "https://..."     Download video
+  youtubecli -d "url" -a ./videos Download video to ./videos
+		`)
+		return
+	}
 
 	if *download != "" {
 		if err := videoDownload.Video(*download, *outputdir); err != nil {
