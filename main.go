@@ -3,7 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	browser "youtubecli/internal"
+	browser "youtubecli/internal/browser"
+	videoDownload "youtubecli/internal/download"
 )
 
 func OpenMainPage() {
@@ -12,7 +13,8 @@ func OpenMainPage() {
 
 func main() {
 	var (
-		download = flag.String("d", "", "Download video")
+		download  = flag.String("d", "", "Download video")
+		outputdir = flag.String("a", "", "Output irection")
 	)
 
 	flag.Parse()
@@ -20,7 +22,7 @@ func main() {
 	args := flag.Args()
 
 	if *download != "" {
-		if err := browser.Download(*download); err != nil {
+		if err := videoDownload.Video(*download, *outputdir); err != nil {
 			fmt.Printf("Error while downloading: %v\n", err)
 		}
 		return
