@@ -22,11 +22,17 @@ yt
 Search for videos:
 yt "never gonna give you up"
 
-Download a video:
+Download a video or a playlist:
 yt -d "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
+Download a video or a playlist as mp3:
+yt -d "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -mp3
+
+Download a video or a playlist choosing save directory:
+yt -d "https://www.youtube.com/watch?v=dQw4w9WgXcQ" -a ~/Downloads
+
 Show help:
-yt help
+yt -h
 # How it works
 
 The project is structured into three main components:
