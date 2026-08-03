@@ -4,15 +4,18 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
-
-	"github.com/lrstanley/go-ytdlp"
 )
 
 func Video(url, directory string, asMP3 bool) error {
-	_, err := ytdlp.Install(context.Background(), nil)
+	ytdlpPath, err := exec.LookPath("yt-dlp")
 	if err != nil {
-		return fmt.Errorf("failed to install yt-dlp: %w", err)
+		return fmt.Errorf("yt-dlp is not installed or is not available in PATH")
+	}
+
+	if _, err := exec.LookPath("ffmpeg"); err != nil {
+		return fmt.Errorf("ffmpeg is not installed or is not available in PATH")
 	}
 
 	var outputPath string
@@ -36,26 +39,36 @@ func Video(url, directory string, asMP3 bool) error {
 		}
 	}
 
-	dl := ytdlp.New().
-		Output(outputPath)
+	args := []string{"--output", outputPath}
 
 	if asMP3 {
-		dl = dl.
-			Format("bestaudio").
-			ExtractAudio().
-			AudioFormat("mp3").
-			AudioQuality("0")
+		args = append(args,
+			"--format", "ba/b",
+			"--extract-audio",
+			"--audio-format", "mp3",
+			"--audio-quality", "0",
+		)
 	} else {
-		dl = dl.Format("best[ext=mp4]")
+		args = append(args,
+			"--format", "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b",
+			"--merge-output-format", "mp4",
+		)
 	}
 
-	_, err = dl.Run(context.Background(), url)
-	if err != nil {
-		return fmt.Errorf("download error: %w", err)
+	// The separator prevents a URL beginning with '-' from being parsed as an option.
+	args = append(args, "--", url)
+
+	cmd := exec.CommandContext(context.Background(), ytdlpPath, args...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("yt-dlp failed: %w", err)
 	}
 
-	fmt.Printf("Download complete!\n")
-	fmt.Printf("Saved to: %s\n", outputPath)
+	fmt.Println("Download complete!")
+	fmt.Printf("Saved to: %s\n", saveDir)
 
 	return nil
 }

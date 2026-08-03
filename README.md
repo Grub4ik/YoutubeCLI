@@ -3,7 +3,7 @@
 YoutubeCLI is a command-line tool for Linux that lets you search, open, and download YouTube videos directly from the terminal.
 # Requirements
 
-Go 1.21 or higher, yt-dlp, ffmpeg.
+Go 1.21 or higher, a recent yt-dlp, ffmpeg, and Deno 2.3 or higher.
 Installation
 
 Clone the repository, build the binary, and install it system-wide:
@@ -38,7 +38,7 @@ yt -h
 The project is structured into three main components:
 main.go handles command-line arguments and routes calls.
 internal/browser.go opens the browser using xdg-open on Linux, open on macOS, or start on Windows.
-internal/download.go downloads videos via yt-dlp with format and output path parameters.
+internal/download.go runs the system yt-dlp binary with format and output path parameters.
 
 Videos are saved to the ~/Downloads folder in the best available quality.
 # Dependencies
@@ -54,12 +54,19 @@ sudo pacman -S yt-dlp ffmpeg
 Fedora:
 sudo dnf install yt-dlp ffmpeg
 
-The Go wrapper for yt-dlp installs automatically on first run.
+Install Deno 2.3 or higher using the official instructions:
+https://docs.deno.com/runtime/getting_started/installation/
+
+yt-dlp uses Deno to solve the JavaScript challenges required for full YouTube support. Keep yt-dlp updated; its nightly release channel is recommended when a stable release stops working with YouTube.
+
+Switch an official yt-dlp executable to the nightly channel:
+yt-dlp --update-to nightly
 # Troubleshooting
 
 Download errors: make sure yt-dlp and ffmpeg are installed:
 yt-dlp --version
 ffmpeg -version
+deno --version
 
 Browser doesn't open: check that xdg-open is installed:
 which xdg-open
